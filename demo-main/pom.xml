@@ -1,0 +1,339 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>demo</artifactId>
+        <groupId>com.meicai</groupId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>demo-main</artifactId>
+
+    <properties>
+        <skip.maven.deploy>true</skip.maven.deploy>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.meicai</groupId>
+            <artifactId>demo-api</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.meicai</groupId>
+            <artifactId>demo-support</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.esotericsoftware.kryo</groupId>
+            <artifactId>kryo</artifactId>
+            <version>2.24.0</version>
+        </dependency>
+        <dependency>
+            <groupId>de.javakaffee</groupId>
+            <artifactId>kryo-serializers</artifactId>
+            <version>0.26</version>
+        </dependency>
+        <dependency>
+            <groupId>aopalliance</groupId>
+            <artifactId>aopalliance</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjrt</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjweaver</artifactId>
+        </dependency>
+    </dependencies>
+    <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+        <plugins>
+            <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>2.5</version>
+                <configuration>
+                    <encoding>${build.file.encoding}</encoding>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>2.2.1</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.apache.maven</groupId>
+                        <artifactId>maven-core</artifactId>
+                        <version>2.2.1</version>
+                        <exclusions>
+                            <exclusion>
+                                <groupId>org.apache.maven.wagon</groupId>
+                                <artifactId>wagon-file</artifactId>
+                            </exclusion>
+                            <exclusion>
+                                <groupId>org.apache.maven.wagon</groupId>
+                                <artifactId>wagon-provider-api</artifactId>
+                            </exclusion>
+                            <exclusion>
+                                <groupId>org.apache.maven.wagon</groupId>
+                                <artifactId>wagon-http-lightweight</artifactId>
+                            </exclusion>
+                            <exclusion>
+                                <groupId>org.apache.maven.wagon</groupId>
+                                <artifactId>wagon-http-shared</artifactId>
+                            </exclusion>
+                            <exclusion>
+                                <groupId>org.apache.maven.wagon</groupId>
+                                <artifactId>wagon-provider-api</artifactId>
+                            </exclusion>
+                            <exclusion>
+                                <groupId>org.apache.maven.wagon</groupId>
+                                <artifactId>wagon-http</artifactId>
+                            </exclusion>
+                            <exclusion>
+                                <groupId>org.apache.maven.wagon</groupId>
+                                <artifactId>wagon-webdav-jackrabbit</artifactId>
+                            </exclusion>
+                            <exclusion>
+                                <groupId>org.apache.maven.wagon</groupId>
+                                <artifactId>wagon-ssh-external</artifactId>
+                            </exclusion>
+                            <exclusion>
+                                <groupId>org.apache.maven.wagon</groupId>
+                                <artifactId>wagon-ssh</artifactId>
+                            </exclusion>
+                            <exclusion>
+                                <groupId>org.apache.maven.reporting</groupId>
+                                <artifactId>maven-reporting-api</artifactId>
+                            </exclusion>
+                        </exclusions>
+                    </dependency>
+                </dependencies>
+                <configuration>
+                    <appendAssemblyId>false</appendAssemblyId>
+                    <descriptors>
+                        <descriptor>src/main/assemble/package.xml</descriptor>
+                    </descriptors>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+    <profiles>
+        <!-- 开发环境 -->
+        <profile>
+            <id>dev</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <!-- log configuration -->
+                <mvn.log.path>logs</mvn.log.path>
+                <mvn.log.level>DEBUG</mvn.log.level>
+
+                <!-- dubbo configuration -->
+                <mvn.dubbo.protocol>zookeeper</mvn.dubbo.protocol>
+                <mvn.dubbo.host>127.0.0.1</mvn.dubbo.host>
+                <mvn.dubbo.port>20880</mvn.dubbo.port>
+                <mvn.application.name>bone</mvn.application.name>
+                <mvn.dubbo.address>127.0.0.1:2181</mvn.dubbo.address>
+                <mvn.dubbo.environment>dev</mvn.dubbo.environment>
+
+                <!-- rocketMQ configuration -->
+                <mvn.mq.nameserver>192.168.56.102:9876</mvn.mq.nameserver>
+                <mvn.mq.timeout>2000</mvn.mq.timeout>
+                <mvn.mq.addOrderTopic>addOrderTopic</mvn.mq.addOrderTopic>
+                <mvn.mq.deleteOrderTopic>deleteOrderTopic</mvn.mq.deleteOrderTopic>
+                <mvn.mq.addOrderSubExp>*</mvn.mq.addOrderSubExp>
+                <mvn.mq.deleteOrderSubExp>*</mvn.mq.deleteOrderSubExp>
+
+                <!-- redis configuration -->
+                <mvn.redis.maxTotal>1000</mvn.redis.maxTotal>
+                <mvn.redis.maxIdle>10</mvn.redis.maxIdle>
+                <mvn.redis.minIdle>1</mvn.redis.minIdle>
+                <mvn.redis.maxWaitMillis>30000</mvn.redis.maxWaitMillis>
+                <mvn.redis.testOnBorrow>true</mvn.redis.testOnBorrow>
+                <mvn.redis.testOnReturn>true</mvn.redis.testOnReturn>
+                <mvn.redis.testWhileIdle>true</mvn.redis.testWhileIdle>
+                <mvn.redis.ip>192.168.56.102</mvn.redis.ip>
+                <mvn.redis.port>6379</mvn.redis.port>
+                <mvn.redis.timeout>1000</mvn.redis.timeout>
+
+                <!-- jdbc configuration -->
+                <mvn.jdbc.driver>com.mysql.jdbc.Driver</mvn.jdbc.driver>
+                <mvn.jdbc.url>jdbc:mysql://192.168.1.160:3306/bone_demo</mvn.jdbc.url>
+                <mvn.jdbc.connectionProperties>
+                    useUnicode=true;characterEncoding=utf8;zeroDateTimeBehavior=convertToNull;allowMultiQueries=true
+                </mvn.jdbc.connectionProperties>
+                <mvn.jdbc.username>bone_demo_rw</mvn.jdbc.username>
+                <mvn.jdbc.password>123456</mvn.jdbc.password>
+
+                <!-- dbcp configuration -->
+                <mvn.dbcp.initialSize>5</mvn.dbcp.initialSize>
+                <mvn.dbcp.maxActive>30</mvn.dbcp.maxActive>
+                <mvn.dbcp.maxIdle>5</mvn.dbcp.maxIdle>
+                <mvn.dbcp.minIdle>2</mvn.dbcp.minIdle>
+                <mvn.dbcp.maxWait>1000</mvn.dbcp.maxWait>
+                <mvn.dbcp.defaultAutoCommit>true</mvn.dbcp.defaultAutoCommit>
+                <mvn.dbcp.timeBetweenEvictionRunsMillis>600000</mvn.dbcp.timeBetweenEvictionRunsMillis>
+                <mvn.dbcp.numTestsPerEvictionRun>3</mvn.dbcp.numTestsPerEvictionRun>
+                <mvn.dbcp.minEvictableIdleTimeMillis>1800000</mvn.dbcp.minEvictableIdleTimeMillis>
+                <mvn.dbcp.testWhileIdle>true</mvn.dbcp.testWhileIdle>
+                <mvn.dbcp.testOnBorrow>false</mvn.dbcp.testOnBorrow>
+                <mvn.dbcp.testOnReturn>false</mvn.dbcp.testOnReturn>
+                <mvn.dbcp.validationQuery>select 1</mvn.dbcp.validationQuery>
+                <mvn.dbcp.removeAbandoned>true</mvn.dbcp.removeAbandoned>
+                <mvn.dbcp.removeAbandonedTimeout>180</mvn.dbcp.removeAbandonedTimeout>
+                <mvn.dbcp.logAbandoned>true</mvn.dbcp.logAbandoned>
+            </properties>
+        </profile>
+
+        <!-- 测试环境 -->
+        <profile>
+            <id>test</id>
+            <properties>
+                <!-- log configuation -->
+                <mvn.log.path>logs</mvn.log.path>
+                <mvn.log.level>INFO</mvn.log.level>
+
+                <!-- dubbo configuration -->
+                <mvn.dubbo.protocol>zookeeper</mvn.dubbo.protocol>
+                <mvn.dubbo.host>127.0.0.1</mvn.dubbo.host>
+                <mvn.dubbo.port>20880</mvn.dubbo.port>
+                <mvn.application.name>bone</mvn.application.name>
+                <mvn.dubbo.address>192.168.2.18:2181</mvn.dubbo.address>
+                <mvn.dubbo.environment>test</mvn.dubbo.environment>
+
+                <!-- rocketMQ configuration -->
+                <mvn.mq.nameserver>192.168.56.102:9876</mvn.mq.nameserver>
+                <mvn.mq.timeout>2000</mvn.mq.timeout>
+                <mvn.mq.addOrderTopic>addOrderTopic</mvn.mq.addOrderTopic>
+                <mvn.mq.deleteOrderTopic>deleteOrderTopic</mvn.mq.deleteOrderTopic>
+                <mvn.mq.addOrderSubExp>*</mvn.mq.addOrderSubExp>
+                <mvn.mq.deleteOrderSubExp>*</mvn.mq.deleteOrderSubExp>
+
+                <!-- redis configuration -->
+                <mvn.redis.maxTotal>1000</mvn.redis.maxTotal>
+                <mvn.redis.maxIdle>10</mvn.redis.maxIdle>
+                <mvn.redis.minIdle>1</mvn.redis.minIdle>
+                <mvn.redis.maxWaitMillis>30000</mvn.redis.maxWaitMillis>
+                <mvn.redis.testOnBorrow>true</mvn.redis.testOnBorrow>
+                <mvn.redis.testOnReturn>true</mvn.redis.testOnReturn>
+                <mvn.redis.testWhileIdle>true</mvn.redis.testWhileIdle>
+                <mvn.redis.ip>192.168.56.102</mvn.redis.ip>
+                <mvn.redis.port>6379</mvn.redis.port>
+                <mvn.redis.timeout>1000</mvn.redis.timeout>
+
+                <!-- jdbc configuration -->
+                <mvn.jdbc.driver>com.mysql.jdbc.Driver</mvn.jdbc.driver>
+                <mvn.jdbc.url>jdbc:mysql://192.168.1.160:3306/bone_demo</mvn.jdbc.url>
+                <mvn.jdbc.connectionProperties>
+                    useUnicode=true;characterEncoding=utf8;zeroDateTimeBehavior=convertToNull;allowMultiQueries=true
+                </mvn.jdbc.connectionProperties>
+                <mvn.jdbc.username>bone_demo_rw</mvn.jdbc.username>
+                <mvn.jdbc.password>123456</mvn.jdbc.password>
+
+                <!-- dbcp configuration -->
+                <mvn.dbcp.initialSize>5</mvn.dbcp.initialSize>
+                <mvn.dbcp.maxActive>30</mvn.dbcp.maxActive>
+                <mvn.dbcp.maxIdle>5</mvn.dbcp.maxIdle>
+                <mvn.dbcp.minIdle>2</mvn.dbcp.minIdle>
+                <mvn.dbcp.maxWait>1000</mvn.dbcp.maxWait>
+                <mvn.dbcp.defaultAutoCommit>true</mvn.dbcp.defaultAutoCommit>
+                <mvn.dbcp.timeBetweenEvictionRunsMillis>600000</mvn.dbcp.timeBetweenEvictionRunsMillis>
+                <mvn.dbcp.numTestsPerEvictionRun>3</mvn.dbcp.numTestsPerEvictionRun>
+                <mvn.dbcp.minEvictableIdleTimeMillis>1800000</mvn.dbcp.minEvictableIdleTimeMillis>
+                <mvn.dbcp.testWhileIdle>true</mvn.dbcp.testWhileIdle>
+                <mvn.dbcp.testOnBorrow>false</mvn.dbcp.testOnBorrow>
+                <mvn.dbcp.testOnReturn>false</mvn.dbcp.testOnReturn>
+                <mvn.dbcp.validationQuery>select 1</mvn.dbcp.validationQuery>
+                <mvn.dbcp.removeAbandoned>true</mvn.dbcp.removeAbandoned>
+                <mvn.dbcp.removeAbandonedTimeout>180</mvn.dbcp.removeAbandonedTimeout>
+                <mvn.dbcp.logAbandoned>true</mvn.dbcp.logAbandoned>
+            </properties>
+        </profile>
+
+        <!-- 生产环境 -->
+        <profile>
+            <id>production</id>
+            <properties>
+                <!-- log configuation -->
+                <mvn.log.path>logs</mvn.log.path>
+                <mvn.log.level>WARN</mvn.log.level>
+
+                <!-- dubbo configuration -->
+                <mvn.dubbo.protocol>zookeeper</mvn.dubbo.protocol>
+                <mvn.dubbo.host>127.0.0.1</mvn.dubbo.host>
+                <mvn.dubbo.port>20880</mvn.dubbo.port>
+                <mvn.application.name>bone</mvn.application.name>
+                <mvn.dubbo.address>192.168.2.18:2181</mvn.dubbo.address>
+                <mvn.dubbo.environment>production</mvn.dubbo.environment>
+
+                <!-- rocketMQ configuration -->
+                <mvn.mq.nameserver>192.168.56.102:9876</mvn.mq.nameserver>
+                <mvn.mq.timeout>2000</mvn.mq.timeout>
+                <mvn.mq.addOrderTopic>addOrderTopic</mvn.mq.addOrderTopic>
+                <mvn.mq.deleteOrderTopic>deleteOrderTopic</mvn.mq.deleteOrderTopic>
+                <mvn.mq.addOrderSubExp>*</mvn.mq.addOrderSubExp>
+                <mvn.mq.deleteOrderSubExp>*</mvn.mq.deleteOrderSubExp>
+
+                <!-- redis configuration -->
+                <mvn.redis.maxTotal>1000</mvn.redis.maxTotal>
+                <mvn.redis.maxIdle>10</mvn.redis.maxIdle>
+                <mvn.redis.minIdle>1</mvn.redis.minIdle>
+                <mvn.redis.maxWaitMillis>30000</mvn.redis.maxWaitMillis>
+                <mvn.redis.testOnBorrow>true</mvn.redis.testOnBorrow>
+                <mvn.redis.testOnReturn>true</mvn.redis.testOnReturn>
+                <mvn.redis.testWhileIdle>true</mvn.redis.testWhileIdle>
+                <mvn.redis.ip>192.168.56.102</mvn.redis.ip>
+                <mvn.redis.port>6379</mvn.redis.port>
+                <mvn.redis.timeout>1000</mvn.redis.timeout>
+
+                <!-- jdbc configuration -->
+                <mvn.jdbc.driver>com.mysql.jdbc.Driver</mvn.jdbc.driver>
+                <mvn.jdbc.url>jdbc:mysql://192.168.1.160:3306/bone_demo</mvn.jdbc.url>
+                <mvn.jdbc.connectionProperties>
+                    useUnicode=true;characterEncoding=utf8;zeroDateTimeBehavior=convertToNull;allowMultiQueries=true
+                </mvn.jdbc.connectionProperties>
+                <mvn.jdbc.username>bone_demo_rw</mvn.jdbc.username>
+                <mvn.jdbc.password>123456</mvn.jdbc.password>
+
+                <!-- rocketMQ configuration -->
+                <mvn.mq.nameserver>192.168.56.102:9876</mvn.mq.nameserver>
+
+                <!-- dbcp configuration -->
+                <mvn.dbcp.initialSize>5</mvn.dbcp.initialSize>
+                <mvn.dbcp.maxActive>30</mvn.dbcp.maxActive>
+                <mvn.dbcp.maxIdle>5</mvn.dbcp.maxIdle>
+                <mvn.dbcp.minIdle>2</mvn.dbcp.minIdle>
+                <mvn.dbcp.maxWait>1000</mvn.dbcp.maxWait>
+                <mvn.dbcp.defaultAutoCommit>true</mvn.dbcp.defaultAutoCommit>
+                <mvn.dbcp.timeBetweenEvictionRunsMillis>600000</mvn.dbcp.timeBetweenEvictionRunsMillis>
+                <mvn.dbcp.numTestsPerEvictionRun>3</mvn.dbcp.numTestsPerEvictionRun>
+                <mvn.dbcp.minEvictableIdleTimeMillis>1800000</mvn.dbcp.minEvictableIdleTimeMillis>
+                <mvn.dbcp.testWhileIdle>true</mvn.dbcp.testWhileIdle>
+                <mvn.dbcp.testOnBorrow>false</mvn.dbcp.testOnBorrow>
+                <mvn.dbcp.testOnReturn>false</mvn.dbcp.testOnReturn>
+                <mvn.dbcp.validationQuery>select 1</mvn.dbcp.validationQuery>
+                <mvn.dbcp.removeAbandoned>true</mvn.dbcp.removeAbandoned>
+                <mvn.dbcp.removeAbandonedTimeout>180</mvn.dbcp.removeAbandonedTimeout>
+                <mvn.dbcp.logAbandoned>true</mvn.dbcp.logAbandoned>
+            </properties>
+        </profile>
+    </profiles>
+</project>

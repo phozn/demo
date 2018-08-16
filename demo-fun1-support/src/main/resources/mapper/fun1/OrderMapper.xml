@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.meicai.demo.fun1.dao.OrderDao">
+	<resultMap id="orderMapper" type="com.meicai.demo.fun1.entity.Order">
+		<id column="id" property="id" jdbcType="BIGINT" />
+		<result property="createTime" column="create_time" jdbcType="TIMESTAMP" />
+		<result column="year" property="year" jdbcType="INTEGER" />
+		<result column="code" property="code" jdbcType="NVARCHAR" />
+		<result column="regionNo" property="region_no" jdbcType="TINYINT" />
+		<result column="sync" property="sync" jdbcType="TINYINT" />
+		<result property="lastTime" column="last_time" jdbcType="TIMESTAMP" />
+		<result column="yn" property="yn" jdbcType="TINYINT" />
+	</resultMap>
+
+	<sql id="fields">id,create_time,year,code,region_no,sync,last_time,yn</sql>
+
+	<insert id="insert" parameterType="com.meicai.demo.fun1.entity.Order" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO
+		bone_order(create_time,year,code,region_no,sync,last_time,yn)
+		VALUES(getdate(),#{year,
+		jdbcType=INTEGER}
+		,#{code,
+		jdbcType=NVARCHAR},#{regionNo,jdbcType=TINYINT},0,getdate(),#{yn,jdbcType=TINYINT})
+	</insert>
+
+
+	<update id="update" parameterType="com.meicai.demo.fun1.entity.Order">
+		UPDATE bone_order SET year =
+		#{year, jdbcType=INTEGER},code=#{code,
+		jdbcType=NVARCHAR},last_time=getdate()
+		WHERE id =
+		#{id,jdbcType=BIGINT}
+	</update>
+
+	<update id="updateSync">
+		UPDATE bone_order SET sync = #{sync,jdbcType=TINYINT},last_time=getdate()
+		WHERE id = #{orderId,jdbcType=BIGINT}
+	</update>
+
+	<update id="delete" parameterType="int">
+		update bone_order set yn=0,sync=0,last_time=getdate() where id = #{id,jdbcType=BIGINT}
+	</update>
+
+
+	<select id="queryOrders" resultType="com.meicai.demo.fun1.entity.Order" resultMap="orderMapper">
+		select
+		<include refid="fields"></include>
+		from bone_order with (nolock) where yn=1 order by id
+	</select>
+
+	<select id="queryNeedSyncOrders" resultType="com.meicai.demo.fun1.entity.Order" resultMap="orderMapper">
+		select top ${limit}
+		<include refid="fields"></include>
+		from bone_order where (sync=0 or sync=2) and region_no
+		in
+		<foreach item="region" index="index" collection="regions"
+			open="(" separator="," close=")">#{region,jdbcType=TINYINT}
+		</foreach>
+	</select>
+
+	<select id="queryOrderById" resultType="com.meicai.demo.fun1.entity.Order" resultMap="orderMapper">
+		select
+		<include refid="fields"></include>
+		from bone_order where id=#{id, jdbcType=BIGINT} and yn=1
+	</select>
+
+	<select id="queryOrderByCode" resultType="com.meicai.demo.fun1.entity.Order" resultMap="orderMapper">
+		select
+		<include refid="fields"></include>
+		from bone_order where code=#{code, jdbcType=NVARCHAR} and yn=1
+	</select>
+</mapper>

@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <parent>
+        <artifactId>demo</artifactId>
+        <groupId>com.meicai</groupId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>demo-web</artifactId>
+    <packaging>war</packaging>
+    <name>bone-web Maven WebApp</name>
+    <url>http://maven.apache.org</url>
+
+    <properties>
+        <skip.maven.deploy>true</skip.maven.deploy>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.sprucetec.bone</groupId>
+            <artifactId>bone-common-support</artifactId>
+            <version>${bone.version}</version>
+        </dependency>
+        <!-- project dependency -->
+        <dependency>
+            <groupId>com.meicai</groupId>
+            <artifactId>demo-api</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+        </dependency>
+
+        <!-- Spring dependencies -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-core</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context-support</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webmvc</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+
+        <!-- dubbox -->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>dubbo</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <version>2.4</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-validator</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.jackson</groupId>
+            <artifactId>jackson-core-asl</artifactId>
+            <version>1.9.13</version>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.jackson</groupId>
+            <artifactId>jackson-mapper-asl</artifactId>
+            <version>1.9.13</version>
+        </dependency>
+        <!-- velocity -->
+        <dependency>
+            <groupId>org.apache.velocity</groupId>
+            <artifactId>velocity</artifactId>
+            <version>${velocity.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.velocity</groupId>
+            <artifactId>velocity-tools</artifactId>
+            <version>2.0</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.struts</groupId>
+                    <artifactId>struts-core</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.struts</groupId>
+                    <artifactId>struts-taglib</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.struts</groupId>
+                    <artifactId>struts-tiles</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>sslext</groupId>
+                    <artifactId>sslext</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+            <version>2.6.3</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.6.3</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+            <version>2.7.0-rc1</version>
+        </dependency>
+    </dependencies>
+    <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+        <plugins>
+            <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>2.5</version>
+                <configuration>
+                    <encoding>${build.file.encoding}</encoding>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+    <profiles>
+        <!-- 开发环境 -->
+        <profile>
+            <id>dev</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <!-- log configuration -->
+                <mvn.log.path>logs</mvn.log.path>
+                <mvn.log.level>DEBUG</mvn.log.level>
+
+                <!-- dubbo configuration -->
+                <mvn.application.name>bone</mvn.application.name>
+                <mvn.dubbo.protocol>zookeeper</mvn.dubbo.protocol>
+                <mvn.dubbo.address>192.168.2.18:2181</mvn.dubbo.address>
+                <mvn.dubbo.environment>dev</mvn.dubbo.environment>
+            </properties>
+        </profile>
+
+        <!-- 测试环境 -->
+        <profile>
+            <id>test</id>
+            <properties>
+                <!-- log configuration -->
+                <mvn.log.path>logs</mvn.log.path>
+                <mvn.log.level>INFO</mvn.log.level>
+
+                <!-- dubbo configuration -->
+                <mvn.application.name>bone</mvn.application.name>
+                <mvn.dubbo.protocol>zookeeper</mvn.dubbo.protocol>
+                <mvn.dubbo.address>192.168.2.18:2181</mvn.dubbo.address>
+                <mvn.dubbo.environment>test</mvn.dubbo.environment>
+            </properties>
+        </profile>
+
+        <!-- 生产环境 -->
+        <profile>
+            <id>production</id>
+            <properties>
+                <!-- log configuration -->
+                <mvn.log.path>logs</mvn.log.path>
+                <mvn.log.level>WARN</mvn.log.level>
+
+                <!-- dubbo configuration -->
+                <mvn.application.name>bone</mvn.application.name>
+                <mvn.dubbo.protocol>zookeeper</mvn.dubbo.protocol>
+                <mvn.dubbo.address>192.168.2.18:2181</mvn.dubbo.address>
+                <mvn.dubbo.environment>production</mvn.dubbo.environment>
+            </properties>
+        </profile>
+    </profiles>
+</project>

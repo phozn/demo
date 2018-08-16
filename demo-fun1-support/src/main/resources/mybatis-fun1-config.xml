@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<settings>
+		<setting name="lazyLoadingEnabled" value="false" />
+		<setting name="multipleResultSetsEnabled" value="true" />
+		<setting name="useColumnLabel" value="true" />
+		<setting name="useGeneratedKeys" value="true" />
+		<setting name="autoMappingBehavior" value="PARTIAL" />
+		<setting name="defaultExecutorType" value="SIMPLE" />
+		<setting name="defaultStatementTimeout" value="20" />
+		<setting name="cacheEnabled" value="false" />
+		<setting name="defaultExecutorType" value="REUSE" />
+	</settings>
+	<typeHandlers>
+		<typeHandler handler="com.sprucetec.bone.common.dao.handler.ValueEnumTypeHandler"
+			javaType="com.meicai.demo.fun1.enums.Gender" jdbcType="TINYINT" />
+	</typeHandlers>
+	<plugins>
+		<plugin interceptor="com.sprucetec.bone.common.dao.pagebatis.PageInterceptor">
+			<property name="dialectType" value="com.sprucetec.bone.common.dao.pagebatis.MySQLDialect" />
+		</plugin>
+	</plugins>
+	<mappers>
+		<mapper resource="mapper/fun1/OrderMapper.xml" />
+		<mapper resource="mapper/fun1/OrderDetailMapper.xml" />
+		<mapper resource="mapper/mysql/scheduleTaskMapper.xml" />
+	</mappers>
+</configuration>

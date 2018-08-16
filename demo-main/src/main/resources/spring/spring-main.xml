@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context-4.0.xsd
+       http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans-4.0.xsd">
+    <bean id="myPropertiesBean" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>classpath:prop/important.properties</value>
+                <value>classpath:prop/application.properties</value>
+                <value>classpath:prop/jdbc.properties</value>
+            </list>
+        </property>
+    </bean>
+    <import resource="classpath:spring/spring-dao.xml"/>
+    <import resource="classpath:spring/spring-dubbo.xml"/>
+    <import resource="classpath:spring/spring-publish.xml"/>
+    <import resource="classpath:spring/spring-ref.xml"/>
+    <import resource="classpath:spring/spring-mq.xml"/>
+    <import resource="classpath:spring/spring-redis.xml"/>
+    <import resource="classpath:spring/spring-ump.xml"/>
+    <!-- controller -->
+    <context:component-scan
+            base-package="com.sprucetec.bone.ump.service,com.sprucetec.bone.common,com.alibaba.dubbo.schedule,com.meicai.demo">
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+    </context:component-scan>
+</beans>

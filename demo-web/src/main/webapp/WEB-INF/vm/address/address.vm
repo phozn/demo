@@ -1,0 +1,36 @@
+#set($layout = "layout/default.vm")
+<div class="body-dialog">
+	<div class="row">
+			#foreach($address in $page.items)
+			#set($pk="pk_"+${address.id})
+			<a href="address?id=${address.id}&pk=$map.get($pk)">地址${address.id}</a>
+			#end
+	</div>
+	<span><a id="btn_save" href="javascript:void(0);" class="easyui-linkbutton btn" iconCls="icon-save">#springMessage("project.button.save")</a></span>
+	<form id="form1" method="post">
+		<input name="id"  type="hidden" value="$!{address.id}"/>
+		
+		<div class="row">
+			<div class="cols">
+				<label class="label">#springMessage("demo.address"):</label>
+				<input name="address" class="easyui-textbox input-short" style="height:25px" value="$!{address.address}" data-options=""/>
+				<span id="address_error" style="color:red"></span>
+			</div>
+			<div class="cols">
+				<label class="label">#springMessage("demo.zip"):</label>
+				<input name="zip" class="easyui-textbox input-short" style="height:25px" value="$!{address.zip}" data-options=""/>
+				<span id="zip_error" style="color:red"></span>
+			</div>
+			<div class="cols">
+				<label class="label">#springMessage("demo.yn"):</label>
+				#if(${address.yn}==1)
+				<input name="yn" type="checkbox" class="easyui-checkbox"  value="$!{address.yn}" data-options="" checked/>
+				#end
+				#if(${address.yn}==0)
+				<input name="yn" type="checkbox" class="easyui-checkbox"  value="$!{address.yn}" data-options=""/>
+				#end
+			</div>
+		</div>
+	</form>
+</div>
+<script type="text/javascript" src="#springUrl('')/static/app/address.js"></script>

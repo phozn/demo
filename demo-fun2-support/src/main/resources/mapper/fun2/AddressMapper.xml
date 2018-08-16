@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.meicai.demo.fun2.dao.AddressDao">
+	<resultMap id="addressMap" type="com.meicai.demo.fun2.entity.Address">
+		<id column="id" property="id" jdbcType="BIGINT" />
+		<result column="address" property="address" jdbcType="NVARCHAR" />
+		<result column="zip" property="zip" jdbcType="NVARCHAR" />
+		<result column="yn" property="yn" jdbcType="TINYINT" />
+	</resultMap>
+
+
+	<insert id="insert" parameterType="com.meicai.demo.fun2.entity.Address" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO bone_address(address,zip,yn)
+		VALUES (#{address,jdbcType=NVARCHAR}, #{zip,jdbcType=NVARCHAR}, #{yn,jdbcType=TINYINT});
+	</insert>
+
+	<update id="update" parameterType="com.meicai.demo.fun2.entity.Address">
+		UPDATE bone_address SET address=#{address,jdbcType=NVARCHAR}, zip=#{zip,jdbcType=NVARCHAR}
+		WHERE id = #{id,jdbcType=BIGINT}
+	</update>
+
+	<select id="queryAddress" resultType="com.meicai.demo.fun2.entity.Address" resultMap="addressMap" parameterType="long">
+        SELECT id, address, zip, yn FROM bone_address where id = #{id,jdbcType=BIGINT}
+	</select>
+	
+	<select id="queryAddresses" resultType="com.meicai.demo.fun2.entity.Address" resultMap="addressMap">
+		SELECT id, address, zip, yn
+        FROM bone_address
+        WHERE yn=1
+        ORDER BY id
+	</select>
+</mapper>

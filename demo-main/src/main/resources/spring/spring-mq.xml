@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd">
+    <bean id="mqProducer" class="com.alibaba.rocketmq.client.producer.DefaultMQProducer" init-method="start"
+          destroy-method="shutdown">
+        <constructor-arg index="0" value="${application.name}"/>
+        <property name="namesrvAddr" value="${mq.nameserver}"/>
+        <property name="sendMsgTimeout" value="${mq.timeout}"/>
+    </bean>
+    <bean id="orderConsumer" class="com.alibaba.rocketmq.client.consumer.DefaultMQPushConsumer">
+        <constructor-arg index="0" value="${application.name}-OrderConsumer"/>
+        <property name="namesrvAddr" value="${mq.nameserver}"/>
+        <property name="consumeFromWhere" value="CONSUME_FROM_FIRST_OFFSET"/>
+    </bean>
+    <bean id="messageListener" class="com.meicai.demo.fun1.message.OrderConsumerListener"/>
+    <bean id="consumerService" class="com.sprucetec.bone.common.message.PushConsumerService" init-method="start"
+          destroy-method="shutdown">
+        <property name="mqConsumer" ref="orderConsumer"/>
+        <property name="items">
+            <list>
+                <bean class="com.sprucetec.bone.common.message.ConsumerItem">
+                    <property name="topic" value="${mq.addOrderTopic}"/>
+                    <property name="subExpression" value="${mq.addOrderSubExp}"/>
+                </bean>
+                <bean class="com.sprucetec.bone.common.message.ConsumerItem">
+                    <property name="topic" value="${mq.deleteOrderTopic}"/>
+                    <property name="subExpression" value="${mq.deleteOrderSubExp}"/>
+                </bean>
+            </list>
+        </property>
+        <property name="messageListener" ref="messageListener"/>
+    </bean>
+</beans>

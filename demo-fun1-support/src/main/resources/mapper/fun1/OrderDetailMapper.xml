@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.meicai.demo.fun1.dao.OrderDetailDao">
+    <resultMap id="orderDetailMapper" type="com.meicai.demo.fun1.entity.OrderDetail">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="name" property="name" jdbcType="NVARCHAR"/>
+        <result column="gender" property="gender" jdbcType="TINYINT"
+                typeHandler="com.sprucetec.bone.common.dao.handler.ValueEnumTypeHandler"/>
+        <result column="birthday" property="birthday" jdbcType="DATE"/>
+        <result column="address_id" property="address.id" jdbcType="BIGINT"/>
+        <result column="order_id" property="orderId" jdbcType="BIGINT"/>
+        <result column="yn" property="yn" jdbcType="TINYINT"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.meicai.demo.fun1.entity.OrderDetail"
+            useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO bone_order_detail(order_id,name, gender, birthday, yn, address_id)
+        VALUES
+        (#{orderId,jdbcType=BIGINT}, #{name,jdbcType=NVARCHAR},
+        #{gender,jdbcType=TINYINT,
+        typeHandler=com.sprucetec.bone.common.dao.handler.ValueEnumTypeHandler},
+        #{birthday,jdbcType=TIMESTAMP}, #{yn,jdbcType=TINYINT},
+        #{address.id,jdbcType=BIGINT});
+    </insert>
+
+    <insert id="insertBatch">
+        insert into bone_order_detail (order_id,name, gender, birthday, yn, address_id)
+        values
+        <foreach collection="list" item="item" index="index" open="" separator="," close="">
+            ( #{item.orderId,jdbcType=BIGINT},
+            #{item.name,jdbcType=NVARCHAR}, #{item.gender ,jdbcType=TINYINT,
+            typeHandler=com.sprucetec.bone.common.dao.handler.ValueEnumTypeHandler},
+            #{item.birthday,jdbcType=TIMESTAMP},
+            #{item.yn,jdbcType=TINYINT},
+            #{item.address.id,jdbcType=BIGINT})
+        </foreach>
+    </insert>
+
+    <update id="deleteByOrderId" parameterType="int">
+        update bone_order_detail set yn = 0
+        where order_id = #{orderId, jdbcType=BIGINT}
+    </update>
+
+    <update id="deleteByDetails">
+        update bone_order_detail
+        set yn = 0
+        where id in
+        <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+            #{item.id,jdbcType=BIGINT}
+        </foreach>
+    </update>
+
+    <update id="update" parameterType="com.meicai.demo.fun1.entity.OrderDetail">
+        update bone_order_detail set
+        name=#{name,jdbcType=NVARCHAR}, birthday=#{birthday,
+        jdbcType=TIMESTAMP}, gender=#{gender,jdbcType=TINYINT,
+        typeHandler=com.sprucetec.bone.common.dao.handler.ValueEnumTypeHandler}
+        where id=#{id,jdbcType=BIGINT}
+    </update>
+
+    <select id="queryDetails" parameterType="int" resultType="com.meicai.demo.fun1.entity.OrderDetail"
+            resultMap="orderDetailMapper">
+        select id, order_id, name, gender, birthday, yn, address_id
+        from bone_order_detail
+        where order_id = #{orderId,jdbcType=BIGINT} and yn = 1
+    </select>
+
+</mapper>

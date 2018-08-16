@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.meicai</groupId>
+        <artifactId>demo</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
+    <artifactId>demo-fun2-test</artifactId>
+
+    <properties>
+        <skip.maven.deploy>true</skip.maven.deploy>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.jmockit</groupId>
+            <artifactId>jmockit</artifactId>
+            <version>1.20</version>
+        </dependency>
+        <dependency>
+            <groupId>com.meicai</groupId>
+            <artifactId>demo-fun2-support</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sprucetec.bone</groupId>
+            <artifactId>bone-common-test</artifactId>
+            <version>${bone.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.10</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+    </dependencies>
+    <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+        <plugins>
+            <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>2.5</version>
+                <configuration>
+                    <encoding>${build.file.encoding}</encoding>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+    <profiles>
+        <!-- 开发环境 -->
+        <profile>
+            <id>dev</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <!-- log configuation -->
+                <mvn.log.path>d:/export/app/bone/logs</mvn.log.path>
+                <mvn.log.level>DEBUG</mvn.log.level>
+
+                <!-- jdbc configuration -->
+                <mvn.jdbc.driver>com.mysql.jdbc.Driver</mvn.jdbc.driver>
+                <mvn.jdbc.url>jdbc:mysql://192.168.1.160:3306/bone_demo</mvn.jdbc.url>
+                <mvn.jdbc.connectionProperties>
+                    useUnicode=true;characterEncoding=utf8;zeroDateTimeBehavior=convertToNull;allowMultiQueries=true
+                </mvn.jdbc.connectionProperties>
+                <mvn.jdbc.username>bone_demo_rw</mvn.jdbc.username>
+                <mvn.jdbc.password>123456</mvn.jdbc.password>
+
+                <!-- dbcp configuration -->
+                <mvn.dbcp.initialSize>5</mvn.dbcp.initialSize>
+                <mvn.dbcp.maxActive>30</mvn.dbcp.maxActive>
+                <mvn.dbcp.maxIdle>5</mvn.dbcp.maxIdle>
+                <mvn.dbcp.minIdle>2</mvn.dbcp.minIdle>
+                <mvn.dbcp.maxWait>1000</mvn.dbcp.maxWait>
+                <mvn.dbcp.defaultAutoCommit>true</mvn.dbcp.defaultAutoCommit>
+                <mvn.dbcp.timeBetweenEvictionRunsMillis>600000</mvn.dbcp.timeBetweenEvictionRunsMillis>
+                <mvn.dbcp.numTestsPerEvictionRun>3</mvn.dbcp.numTestsPerEvictionRun>
+                <mvn.dbcp.minEvictableIdleTimeMillis>1800000</mvn.dbcp.minEvictableIdleTimeMillis>
+                <mvn.dbcp.testWhileIdle>true</mvn.dbcp.testWhileIdle>
+                <mvn.dbcp.testOnBorrow>false</mvn.dbcp.testOnBorrow>
+                <mvn.dbcp.testOnReturn>false</mvn.dbcp.testOnReturn>
+                <mvn.dbcp.validationQuery>select 1</mvn.dbcp.validationQuery>
+                <mvn.dbcp.removeAbandoned>true</mvn.dbcp.removeAbandoned>
+                <mvn.dbcp.removeAbandonedTimeout>180</mvn.dbcp.removeAbandonedTimeout>
+                <mvn.dbcp.logAbandoned>true</mvn.dbcp.logAbandoned>
+            </properties>
+        </profile>
+
+        <!-- 测试环境 -->
+        <profile>
+            <id>test</id>
+            <properties>
+                <!-- log configuation -->
+                <mvn.log.path>/export/home/tomcat/logs/bone</mvn.log.path>
+                <mvn.log.level>INFO</mvn.log.level>
+
+                <!-- jdbc configuration -->
+                <mvn.jdbc.driver>com.mysql.jdbc.Driver</mvn.jdbc.driver>
+                <mvn.jdbc.url>jdbc:mysql://192.168.1.160:3306/bone_demo</mvn.jdbc.url>
+                <mvn.jdbc.connectionProperties>
+                    useUnicode=true;characterEncoding=utf8;zeroDateTimeBehavior=convertToNull;allowMultiQueries=true
+                </mvn.jdbc.connectionProperties>
+                <mvn.jdbc.username>bone_demo_rw</mvn.jdbc.username>
+                <mvn.jdbc.password>123456</mvn.jdbc.password>
+
+                <!-- dbcp configuration -->
+                <mvn.dbcp.initialSize>5</mvn.dbcp.initialSize>
+                <mvn.dbcp.maxActive>30</mvn.dbcp.maxActive>
+                <mvn.dbcp.maxIdle>5</mvn.dbcp.maxIdle>
+                <mvn.dbcp.minIdle>2</mvn.dbcp.minIdle>
+                <mvn.dbcp.maxWait>1000</mvn.dbcp.maxWait>
+                <mvn.dbcp.defaultAutoCommit>true</mvn.dbcp.defaultAutoCommit>
+                <mvn.dbcp.timeBetweenEvictionRunsMillis>600000</mvn.dbcp.timeBetweenEvictionRunsMillis>
+                <mvn.dbcp.numTestsPerEvictionRun>3</mvn.dbcp.numTestsPerEvictionRun>
+                <mvn.dbcp.minEvictableIdleTimeMillis>1800000</mvn.dbcp.minEvictableIdleTimeMillis>
+                <mvn.dbcp.testWhileIdle>true</mvn.dbcp.testWhileIdle>
+                <mvn.dbcp.testOnBorrow>false</mvn.dbcp.testOnBorrow>
+                <mvn.dbcp.testOnReturn>false</mvn.dbcp.testOnReturn>
+                <mvn.dbcp.validationQuery>select 1</mvn.dbcp.validationQuery>
+                <mvn.dbcp.removeAbandoned>true</mvn.dbcp.removeAbandoned>
+                <mvn.dbcp.removeAbandonedTimeout>180</mvn.dbcp.removeAbandonedTimeout>
+                <mvn.dbcp.logAbandoned>true</mvn.dbcp.logAbandoned>
+            </properties>
+        </profile>
+    </profiles>
+</project>
